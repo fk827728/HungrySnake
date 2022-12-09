@@ -1,0 +1,568 @@
+    <!-- MAKE THE ATOMIC NUMBER RESET -->
+<!DOCTYPE html>
+
+
+<html>
+    <head>
+        <style>
+            body {
+                text-align: center;
+            }
+        </style>
+    </head>
+     
+    <body>
+        <button onclick="myalert()">
+          How to Play
+        </button>
+     
+        <script>
+            function myalert() {
+                alert("How to Play \n" + 
+                "• Use the four arrows to turn \n" +  
+                "• Press the space bar to pause \n" + 
+                "• Tap on the 'Atomic Number' button to learn more about the element you are currently on \n" +
+                "• Don't run into the walls or yourself!! \n" +
+                "• You're snake will grow one square longer every FIVE foods that you eat \n" + 
+                " \n" +
+                "Enjoy! :)");
+            }
+        </script>
+     
+    </body>
+
+    <head>
+        <title>Periodic Table Hungry Snake</title>
+        <style type="text/css">
+            html,
+            body {
+                height: 100%;
+            }
+
+            body {
+                background-image: url(background\ 2.0.PNG);
+                background-repeat: no-repeat;
+                background-size: 100% 100%;
+            }
+        </style>
+
+        <title>Hungry Snake</title>
+
+        <table style="margin-left: auto; margin-right: auto">
+            <tr>
+                    <td colspan="3" style="text-align: center">
+                    <h1 style="color: #b2ffff">Periodic Table Hungry Snake</h1>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <img
+                        src="start.jpg"
+                        width="75"
+                        height="75"
+                        onclick="start()"
+                    />
+                </td>
+                <td id="tips" style="color: #b2ffff"></td>
+                <td style="text-align: right">
+                    <a
+                        target="blank"
+                        href="https://elements.wlonk.com/ElementUses.htm"
+                        id="score"
+                        style="color: #4b9cd3"
+                        >Atomic Number: 0
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <canvas
+                        id="can"
+                        width="484"
+                        height="484"
+                        style="background-color: #ffffff"
+                    >
+                    </canvas>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" style="color: cornflowerblue; width: 484">
+                    <textarea
+                        id="banana"
+                        rows="4"
+                        cols="64"
+                        wrap="hard"
+                        readonly="true"
+                        style="
+                            resize: none;
+                            width: 100%;
+                            color: #b2ffff;
+                            background: transparent;
+                            border: none;
+                            outline: none;
+                        "
+                    >
+                    </textarea>
+                </td>
+            </tr>
+        </table>
+
+        <script>
+            let canvas,
+                i,
+                j,
+                snake,
+                food,
+                direction = "ArrowRight",
+                keydownFlag = false,
+                id,
+                score,
+                index,
+                gameStart = false;
+            let pause = false;
+            let elementsArray = [
+                "H",
+                "He",
+                "Li",
+                "Be",
+                "B",
+                "C",
+                "N",
+                "O",
+                "F",
+                "Ne",
+                "Na",
+                "Mg",
+                "Al",
+                "Si",
+                "P",
+                "S",
+                "Cl",
+                "Ar",
+                "K",
+                "Ca",
+                "Sc",
+                "Ti",
+                "V",
+                "Cr",
+                "Mn",
+                "Fe",
+                "Co",
+                "Ni",
+                "Cu",
+                "Zn",
+                "Ga",
+                "Ge",
+                "As",
+                "Se",
+                "Br",
+                "Kr",
+                "Rb",
+                "Sr",
+                "Y",
+                "Zr",
+                "Nb",
+                "Mo",
+                "Tc",
+                "Ru",
+                "Rh",
+                "Pd",
+                "Ag",
+                "Cd",
+                "In",
+                "Sn",
+                "Sb",
+                "Te",
+                "I",
+                "Xe",
+                "Cs",
+                "Ba",
+                "La",
+                "Ce",
+                "Pr",
+                "Nd",
+                "Pm",
+                "Sm",
+                "Eu",
+                "Gd",
+                "Tb",
+                "Dy",
+                "Ho",
+                "Er",
+                "Tm",
+                "Yb",
+                "Lu",
+                "Hf",
+                "Ta",
+                "W",
+                "Re",
+                "Os",
+                "Ir",
+                "Pt",
+                "Au",
+                "Hg",
+                "Tl",
+                "Pb",
+                "Bi",
+                "Po",
+                "At",
+                "Rn",
+                "Fr",
+                "Ra",
+                "Ac",
+                "Th",
+                "Pa",
+                "U",
+                "Np",
+                "Pu",
+                "Am",
+                "Cm",
+                "Bk",
+                "Cf",
+                "Es",
+                "Fm",
+                "Md",
+                "No",
+                "Lr",
+                "Rf",
+                "Db",
+                "Sg",
+                "Bh",
+                "Hs",
+                "Mt",
+                "Ds",
+                "Rg",
+                "Cn",
+                "Nh",
+                "Fl",
+                "Mc",
+                "Lv",
+                "Ts",
+                "Og",
+            ];
+
+            let elementsArray2 = [
+                "Hydrogen",
+                "Helium",
+                "Lithium",
+                "Beryllium",
+                "Boron",
+                "Carbon",
+                "Nitrogen",
+                "Oxygen",
+                "Fluoride",
+                "Neon",
+                "Sodium",
+                "Magnesium",
+                "Aluminum",
+                "Silicon",
+                "Phosphorus",
+                "Sulfur",
+                "Chlorine",
+                "Argon",
+                "Potassium",
+                "Calcium",
+                "Scandium",
+                "Titanium",
+                "Vanadium",
+                "Chromium",
+                "Manganese",
+                "Iron",
+                "Cobalt",
+                "Nickel",
+                "Copper",
+                "Zinc",
+                "Gallium",
+                "Germanium",
+                "Arsenic",
+                "Selenium",
+                "Bromine",
+                "Krypton",
+                "Rubidium",
+                "Strontium",
+                "Yttrium",
+                "Zirconium",
+                "Niobium",
+                "Molybdenum",
+                "Technetium",
+                "Ruthenium",
+                "Rhodium",
+                "Palladium",
+                "Silver",
+                "Cadmium",
+                "Indium",
+                "Tin",
+                "Antimony",
+                "Tellurium",
+                "Iodine",
+                "Xenon",
+                "Caesium",
+                "Barium",
+                "Lanthanum",
+                "Cerium",
+                "Praseodymium",
+                "Neodymium",
+                "Promethium",
+                "Samarium",
+                "Europium",
+                "Gadolinium",
+                "Terbium",
+                "Dysprosium",
+                "Holmium",
+                "Erbium",
+                "Thulium",
+                "Ytterbium",
+                "Lutetium",
+                "Hafnium",
+                "Tantalum",
+                "Tungsten",
+                "Rhenium",
+                "Osmium",
+                "Iridium",
+                "Platinum",
+                "Gold",
+                "Mercury",
+                "Thallium",
+                "Lead",
+                "Bismuth",
+                "Polonium",
+                "Astatine",
+                "Radon",
+                "Francium",
+                "Radium",
+                "Actinium",
+                "Thorium",
+                "Protactinium",
+                "Uranium",
+                "Neptunium",
+                "Plutonium",
+                "Americium",
+                "Curium",
+                "Berkelium",
+                "Californium",
+                "Einsteinium",
+                "Fermium",
+                "Mendelevium",
+                "Nobelium",
+                "Lawerencium",
+                "Rutherforium",
+                "Dubnium",
+                "Seaborgium",
+                "Bohrium",
+                "Hassium",
+                "Meitnerium",
+                "Darmstadtium",
+                "Roentgenium",
+                "Copernicium",
+                "Nihonium",
+                "Flerovium",
+                "Moscovium",
+                "Livermorium",
+                "Tennessine",
+                "Oganesson",
+            ];
+
+            function drawBox(x, y, color) {
+                canvas.fillStyle = color;
+                canvas.fillRect(x * 22 + 1, y * 22 + 1, 21, 21);
+            }
+
+            function drawText(x, y, color, text, font) {
+                canvas.font = font;
+                canvas.fillStyle = color;
+                canvas.fillText(text, x * 22 + 1, y * 22 + 10);
+            }
+
+            function isPointOnSnake(x, y) {
+                for (let i = 0; i < snake.length; i++) {
+                    if (snake[i].x == x && snake[i].y == y) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            function snakeMove() {
+                let snakeHead = snake[0];
+                let snakeTail = snake[snake.length - 1];
+                let newSnakeHeadX, newSnakeHeadY;
+                if (direction == "ArrowRight") {
+                    newSnakeHeadX = snakeHead.x + 1;
+                    newSnakeHeadY = snakeHead.y;
+                } else if (direction == "ArrowDown") {
+                    newSnakeHeadX = snakeHead.x;
+                    newSnakeHeadY = snakeHead.y + 1;
+                } else if (direction == "ArrowLeft") {
+                    newSnakeHeadX = snakeHead.x - 1;
+                    newSnakeHeadY = snakeHead.y;
+                } else if (direction == "ArrowUp") {
+                    newSnakeHeadX = snakeHead.x;
+                    newSnakeHeadY = snakeHead.y - 1;
+                }
+
+                if (isPointOnSnake(newSnakeHeadX, newSnakeHeadY)) {
+                    clearInterval(id);
+                    let tips = document.getElementById("tips");
+                    tips.innerHTML = "You lose";
+                    gameStart = false;
+                    return;
+                }
+
+                if (
+                    newSnakeHeadX == -1 ||
+                    newSnakeHeadY == -1 ||
+                    newSnakeHeadX == 22 ||
+                    newSnakeHeadY == 22
+                ) {
+                    clearInterval(id);
+                    let tips = document.getElementById("tips");
+                    tips.innerHTML = "You lose";
+                    gameStart = false;
+                    return;
+                }
+
+                if (
+                    newSnakeHeadX != food.x ||
+                    newSnakeHeadY != food.y ||
+                    (index + 1) % 5 != 0
+                ) {
+                    drawBox(snakeTail.x, snakeTail.y, "#82EEFD");
+                }
+                drawBox(snakeHead.x, snakeHead.y, "#FEC5E5");
+                drawBox(newSnakeHeadX, newSnakeHeadY, "#E0B0FF");
+
+                if (
+                    newSnakeHeadX != food.x ||
+                    newSnakeHeadY != food.y ||
+                    (index + 1) % 5 != 0
+                ) {
+                    snake.pop();
+                }
+                snake.unshift({ x: newSnakeHeadX, y: newSnakeHeadY });
+
+                if (food.x == newSnakeHeadX && food.y == newSnakeHeadY) {
+                    let potato = document.getElementById("banana");
+                    potato.innerHTML += " " + elementsArray2[index];
+
+                    score += 1;
+                    let link = document.getElementById("score");
+                    link.innerHTML = "Atomic Number: " + score;
+                    link.href =
+                        "https://www.rsc.org/periodic-table/element/" + score;
+
+                    if (elementsArray.length == index + 1) {
+                        clearInterval(id);
+                        let notes = document.getElementById("tips");
+                        notes.innerHTML = "You win";
+                        return;
+                    }
+
+                    let newFoodX, newFoodY;
+                    newFoodX = Math.floor(Math.random() * 22);
+                    newFoodY = Math.floor(Math.random() * 22);
+                    while (isPointOnSnake(newFoodX, newFoodY)) {
+                        newFoodX = Math.floor(Math.random() * 22);
+                        newFoodY = Math.floor(Math.random() * 22);
+                    }
+                    index++;
+                    drawBox(newFoodX, newFoodY, "#DF00FF");
+                    drawText(
+                        newFoodX,
+                        newFoodY,
+                        "black",
+                        elementsArray[index],
+                        "Arial"
+                    );
+                    food.x = newFoodX;
+                    food.y = newFoodY;
+                }
+
+                keydownFlag = false;
+            }
+
+            function start() {
+                if (gameStart) {
+                    return;
+                }
+                gameStart = true;
+                index = 0;
+                score = 0;
+                direction = "ArrowRight";
+                keydownFlag = false;
+                let tips = document.getElementById("tips");
+                tips.innerHTML = "";
+                let banana = document.getElementById("banana");
+                banana.innerHTML = "";
+                canvas = document.getElementById("can").getContext("2d");
+                snake = [
+                    { x: 4, y: 2 },
+                    { x: 3, y: 2 },
+                    { x: 2, y: 2 },
+                ];
+                food = { x: 10, y: 10 };
+
+                for (i = 0; i < 22; i++) {
+                    for (j = 0; j < 22; j++) {
+                        drawBox(i, j, "#82EEFD");
+                    }
+                }
+
+                for (i = 0; i < snake.length; i++) {
+                    drawBox(snake[i].x, snake[i].y, "#FEC5E5");
+                }
+
+                drawBox(snake[0].x, snake[0].y, "#E0B0FF");
+
+                drawBox(food.x, food.y, "#DF00FF");
+                drawText(food.x, food.y, "black", elementsArray[0], "Arial");
+
+                snakeMove();
+
+                id = setInterval(snakeMove, 300);
+            }
+            start();
+            function keydown(evt) {
+                if (
+                    evt.key == "ArrowUp" ||
+                    evt.key == "ArrowDown" ||
+                    evt.key == "ArrowLeft" ||
+                    evt.key == "ArrowRight"
+                ) {
+                    if (pause) {
+                        return;
+                    }
+                    if (keydownFlag == true) {
+                        return;
+                    }
+                    keydownFlag = true;
+
+                    if (direction == "ArrowRight" && evt.key == "ArrowLeft") {
+                        return;
+                    }
+                    if (direction == "ArrowLeft" && evt.key == "ArrowRight") {
+                        return;
+                    }
+                    if (direction == "ArrowUp" && evt.key == "ArrowDown") {
+                        return;
+                    }
+                    if (direction == "ArrowDown" && evt.key == "ArrowUp") {
+                        return;
+                    }
+                    direction = evt.key;
+                }
+
+                if (evt.key == " ") {
+                    if (!pause) {
+                        clearInterval(id);
+                        pause = true;
+                    } else {
+                        id = setInterval(snakeMove, 300);
+                        pause = false;
+                    }
+                }
+            }
+
+            document.onkeydown = keydown;
+        </script>
+    </head>
+</html>
